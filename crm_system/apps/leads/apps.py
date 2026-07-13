@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class LeadsConfig(AppConfig):
-    name = "leads"
+    name = "apps.leads"
+    verbose_name = "Потенциальные клиенты"
