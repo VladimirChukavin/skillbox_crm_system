@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class ContractsConfig(AppConfig):
-    name = "contracts"
+    name = "apps.contracts"
+    verbose_name = "Контракты"
