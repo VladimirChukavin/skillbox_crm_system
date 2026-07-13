@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class AdsConfig(AppConfig):
-    name = "ads"
+    name = "apps.ads"
+    verbose_name = "Рекламные кампании"
