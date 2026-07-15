@@ -1,0 +1,43 @@
+[project]
+name = "crm_system"
+version = "1.0.0"
+description = "Пользовательская CRM-система"
+readme = "README.md"
+
+[tool.pylint.main]
+load-plugins = ["pylint_django"]
+django-settings-module = "config.settings"
+ignore = ["migrations", "tests"]
+
+[tool.pylint.format]
+max-line-length = 100
+
+[tool.pylint.messages_control]
+disable = [
+    "missing-module-docstring",
+    "too-few-public-methods",
+]
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+strict = true
+ignore_missing_imports = true
+warn_return_any = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+warn_unused_ignores = true
+pretty = true
+exclude = [
+    "README.md",
+    ".env",
+    ".gitignore",
+    "^static/.*$",
+]
+
+[tool.django-stubs]
+django_settings_module = "config.settings"
+
+[tool.pytest]
+django_settings_module = "config.settings"
+python_files = ["test_*.py", "*_test.py"]
+testpaths = ["apps"]
