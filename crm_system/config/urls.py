@@ -18,14 +18,26 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    path("", RedirectView.as_view(pattern_name="ads:ads-statistic"), name="home"),
     path("admin/", admin.site.urls),
+    path(
+        "login/",
+        LoginView.as_view(template_name="registration/login.html"),
+        name="login",
+    ),
+    path("logout/", LogoutView.as_view(), name="logout"),
+    path("ads/", include("apps.ads.urls")),
+    path("contracts/", include("apps.contracts.urls")),
+    path("customers/", include("apps.customers.urls")),
+    path("leads/", include("apps.leads.urls")),
+    path("products/", include("apps.products.urls")),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.STATIC_URL,
-        document_root=settings.STATIC_ROOT,
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
