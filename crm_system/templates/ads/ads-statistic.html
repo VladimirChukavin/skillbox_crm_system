@@ -1,17 +1,56 @@
 {% extends "_base.html" %}
 
+{% block title %}Статистика рекламных компаний{% endblock %}
+
 {% block content %}
 <h2 class="fw-bold">Статистика рекламных компаний</h2>
 <div class="row bg-white px-3 py-3 mx-2 my-5 rounded pb-5 shadow-lg">
     <div class="col">
-        <ul class="list-group">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Кампания</th>
+                <th>Лидов</th>
+                <th>Активных клиентов</th>
+                <th>Доход от контрактов</th>
+                <th>Бюджет</th>
+                <th>Соотношение доход/бюджет</th>
+            </tr>
+            </thead>
+            <tbody>
             {% for ad in ads %}
-            <li class="list-group-item list-group-item-light d-flex justify-content-between">
-                <a href="/ads/{{ ad.pk }}" class="text-decoration-none link-dark">{{ ad.name }}</a>
-                <p>Лидов: {{ ad.leads_count }} | Активных клиентов: {{ ad.customers_count }} | Соотношение контрактов к затратам: {{ ad.profit|default_if_none:"-" }}</p>
-            </li>
+            <tr>
+                <td>
+                    <a href="{% url 'ads:ads-detail' ad.pk %}"
+                       class="text-decoration-none link-dark">{{ ad.name }}</a>
+                </td>
+                <td>{{ ad.leads_count }}</td>
+                <td>{{ ad.active_customer_count }}</td>
+                <td>{{ ad.total_contract_amount|floatformat:2 }} руб</td>
+                <td>{{ ad.budget|floatformat:2 }} руб</td>
+                <td>
+                    {% if ad.budget > 0 %}
+                    	{{ ad.total_contract_amount|floatformat:2 }} / {{ ad.budget|floatformat:2 }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">Нет рекламных кампаний.</td>
+            </tr>
             {% endfor %}
-        </ul>
+            </tbody>
+        </table>
+<!--        <ul class="list-group">-->
+<!--            {% for ad in ads %}-->
+<!--            <li class="list-group-item list-group-item-light d-flex justify-content-between">-->
+<!--                <a href="/ads/{{ ad.pk }}" class="text-decoration-none link-dark">{{ ad.name }}</a>-->
+<!--                <p>Лидов: {{ ad.leads_count }} | Активных клиентов: {{ ad.customers_count }} | Соотношение контрактов к затратам: {{ ad.profit|default_if_none:"-" }}</p>-->
+<!--            </li>-->
+<!--            {% endfor %}-->
+<!--        </ul>-->
     </div>
 </div>
 {% endblock %}
