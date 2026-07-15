@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Авторизация</title>
@@ -10,11 +10,13 @@
 <div class="container mt-5">
     <div class="row d-flex justify-content-center">
         <div class="col-md-6">
+            <h2 class="text-center mb-4">CRM BACKOFFICE</h2>
             <div class="card px-5 py-5" id="form1">
+                <h3 class="mb-3">Вход в систему</h3>
                 <form method="post">
                   {% csrf_token %}
                   {{ form.as_p }}
-                  <button type="submit">Войти</button>
+                  <button type="submit" class="btn btn-primary w-100 mt-3">Войти</button>
                 </form>
             </div>
         </div>
