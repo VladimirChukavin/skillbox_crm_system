@@ -1,14 +1,17 @@
 {% extends "_base.html" %}
 
+{% block title %}Создание контракта{% endblock %}
+
 {% block content %}
 <h2 class="fw-bold">Создание контракта</h2>
 <div class="row bg-white px-3 py-3 mx-2 my-5 rounded pb-5 shadow-lg">
     <div class="col"></div>
     <div class="col">
-        <form method="POST" enctype="multipart/form-data" action="/contracts/new/">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'contracts:contracts-create' %}">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary">Создать</button>
+            <a href="{% url 'contracts:contracts-list' %}" class="btn btn-secondary">Отмена</a>
         </form>
     </div>
     <div class="col"></div>
