@@ -1,18 +1,38 @@
 {% extends "_base.html" %}
 
+{% block title %}Потенциальные клиенты - список{% endblock %}
+
 {% block content %}
-<h2 class="fw-bold">Лиды</h2>
+<h2 class="fw-bold">Потенциальные клиенты</h2>
 <div class="row bg-white px-3 py-3 mx-2 my-5 rounded pb-5 shadow-lg">
     <div class="hstack gap-3 pb-4">
-        <a href="/leads/new" class="btn btn-success p-2">Создать</a>
+        {% if perms.leads.add_lead %}
+        <a href="{% url 'leads:leads-create' %}" class="btn btn-success p-2">Создать</a>
+        {% endif %}
     </div>
     <div class="col">
         <ul class="list-group">
             {% for lead in leads %}
-            <li class="list-group-item list-group-item-light d-flex justify-content-between">
-                <a href="/leads/{{ lead.pk }}" class="text-decoration-none link-dark">{{ lead.last_name }} {{ lead.first_name }}</a>
-                <a href="/leads/{{ lead.pk }}/delete" class="btn btn-danger">Удалить</a>
+            <li class="list-group-item list-group-item-light d-flex justify-content-between align-items-center">
+                <a href="{% url 'leads:leads-detail' lead.pk %}"
+                   class="text-decoration-none link-dark">{{ lead.full_name }}</a>
+                <span>
+                    {% if perms.customer.add_customer %}
+                    <a href="{% url 'customers:customers-create' %}?lead={{ lead.pk }}"
+                       class="btn btn-sm btn-success">
+                        <i class="fas fa-user-check"></i> В активные
+                    </a>
+                    {% endif %}
+                    {% if perms.leads.delete_lead %}
+                    <a href="{% url 'leads:leads-delete' lead.pk %}"
+                       class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                    {% endif %}
+                </span>
             </li>
+            {% empty %}
+            <li class="list-group-item">Нет потенциальных клиентов.</li>
             {% endfor %}
         </ul>
     </div>
