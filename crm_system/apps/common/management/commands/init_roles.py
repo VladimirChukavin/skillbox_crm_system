@@ -17,9 +17,9 @@ ROLE_PERMISSIONS = {
         "ads.change_adcampaign",
     ],
     "Менеджер": [
-        "contracts.view_contracts",
-        "contracts.add_contracts",
-        "contracts.change_contracts",
+        "contracts.view_contract",
+        "contracts.add_contract",
+        "contracts.change_contract",
         "leads.view_lead",
         "customers.view_customer",
         "customers.add_customer",
