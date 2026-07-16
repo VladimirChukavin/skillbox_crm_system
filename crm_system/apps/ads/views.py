@@ -48,7 +48,7 @@ class AdCampaignDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVi
     permission_required = "ads.delete_adcampaign"
 
 
-class AdCampaignStatisticView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class AdCampaignStatisticView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = AdCampaign
     template_name = "ads/ads-statistic.html"
     context_object_name = "ads"
@@ -57,9 +57,9 @@ class AdCampaignStatisticView(LoginRequiredMixin, PermissionRequiredMixin, Detai
     def get_queryset(self):
         return AdCampaign.objects.annotate(
             leads_count=Count("leads", distinct=True),
-            active_customers_count=Count("lead__customer", distinct=True),
+            active_customers_count=Count("leads__customer", distinct=True),
             total_contract_amount=Sum(
-                "lead__customer__contract__amount",
+                "leads__customer__contract__amount",
                 default=0,
             ),
         )
