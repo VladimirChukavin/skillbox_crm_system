@@ -6,7 +6,7 @@ class Lead(models.Model):
     phone = models.CharField(max_length=15, verbose_name="Телефон")
     email = models.EmailField(verbose_name="Email")
     ad_campaign = models.ForeignKey(
-        "AdCampaign",
+        "ads.AdCampaign",
         on_delete=models.CASCADE,
         related_name="leads",
         verbose_name="Рекламная кампания",
