@@ -3,13 +3,13 @@ from django.db import models
 
 class Customer(models.Model):
     lead = models.OneToOneField(
-        "Lead",
+        "leads.Lead",
         on_delete=models.CASCADE,
         related_name="customer",
         verbose_name="Потенциальный клиент",
     )
     contract = models.ForeignKey(
-        "Contract",
+        "contracts.Contract",
         on_delete=models.CASCADE,
         related_name="customers",
         verbose_name="Контракт",
