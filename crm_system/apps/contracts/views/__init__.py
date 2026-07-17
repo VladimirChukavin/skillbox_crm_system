@@ -1,0 +1,5 @@
+from .contract_list_view import ContractListView
+from .contract_create_view import ContractCreateView
+from .contract_detail_view import ContractDetailView
+from .contract_update_view import ContractUpdateView
+from .contract_delete_view import ContractDeleteView
