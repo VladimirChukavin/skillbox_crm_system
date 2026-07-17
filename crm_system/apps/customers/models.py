@@ -6,7 +6,7 @@ class Customer(models.Model):
         "leads.Lead",
         on_delete=models.CASCADE,
         related_name="customer",
-        verbose_name="Потенциальный клиент",
+        verbose_name="Активный клиент",
     )
     contract = models.ForeignKey(
         "contracts.Contract",
