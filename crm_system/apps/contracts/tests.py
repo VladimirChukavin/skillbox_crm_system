@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import pytest
 
 from django.core.files.uploadedfile import SimpleUploadedFile
