@@ -17,7 +17,7 @@
                 <a href="{% url 'leads:leads-detail' lead.pk %}"
                    class="text-decoration-none link-dark">{{ lead.full_name }}</a>
                 <span>
-                    {% if perms.customer.add_customer %}
+                    {% if perms.customers.add_customer and not lead.customer %}
                     <a href="{% url 'customers:customers-create' %}?lead={{ lead.pk }}"
                        class="btn btn-sm btn-success">
                         <i class="fas fa-user-check"></i> В активные
