@@ -20,10 +20,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
-from django.views.generic import RedirectView
+from django.views.generic import TemplateView
 
 urlpatterns = [
-    path("", RedirectView.as_view(pattern_name="ads:ads-statistic"), name="home"),
+    path("", TemplateView.as_view(template_name="users/index.html"), name="home"),
     path("admin/", admin.site.urls),
     path(
         "login/",
