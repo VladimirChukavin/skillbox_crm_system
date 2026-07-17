@@ -22,7 +22,7 @@
                     {% endif %}
                     {% if perms.customers.delete_customer %}
                     <a href="{% url 'customers:customers-delete' object.pk %}"
-                       class="btn btn-primary">Удалить</a>
+                       class="btn btn-danger">Удалить</a>
                     {% endif %}
                 </div>
             </div>
