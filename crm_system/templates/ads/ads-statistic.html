@@ -25,7 +25,7 @@
                        class="text-decoration-none link-dark">{{ ad.name }}</a>
                 </td>
                 <td>{{ ad.leads_count }}</td>
-                <td>{{ ad.active_customer_count }}</td>
+                <td>{{ ad.active_customers_count }}</td>
                 <td>{{ ad.total_contract_amount|floatformat:2 }} руб</td>
                 <td>{{ ad.budget|floatformat:2 }} руб</td>
                 <td>
@@ -43,14 +43,6 @@
             {% endfor %}
             </tbody>
         </table>
-<!--        <ul class="list-group">-->
-<!--            {% for ad in ads %}-->
-<!--            <li class="list-group-item list-group-item-light d-flex justify-content-between">-->
-<!--                <a href="/ads/{{ ad.pk }}" class="text-decoration-none link-dark">{{ ad.name }}</a>-->
-<!--                <p>Лидов: {{ ad.leads_count }} | Активных клиентов: {{ ad.customers_count }} | Соотношение контрактов к затратам: {{ ad.profit|default_if_none:"-" }}</p>-->
-<!--            </li>-->
-<!--            {% endfor %}-->
-<!--        </ul>-->
     </div>
 </div>
 {% endblock %}
