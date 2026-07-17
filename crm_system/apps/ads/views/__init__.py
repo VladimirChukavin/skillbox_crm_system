@@ -1,0 +1,6 @@
+from .adcampaign_list_view import AdCampaignListView
+from .adcampaign_create_view import AdCampaignCreateView
+from .adcampaign_detail_view import AdCampaignDetailView
+from .adcampaign_update_view import AdCampaignUpdateView
+from .adcampaign_delete_view import AdCampaignDeleteView
+from .adcampaign_statistic_view import AdCampaignStatisticView
