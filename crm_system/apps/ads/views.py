@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db.models import Count, QuerySet, Sum
+from django.db.models import Count, Sum
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
