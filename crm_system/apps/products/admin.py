@@ -5,6 +5,7 @@ from .models import Product
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "price")
-    list_display_links = ("id", "name")
-    search_fields = ("name",)
+    list_display: tuple[str, ...] = ("id", "name", "price")
+    list_display_links: tuple[str, ...] = ("id", "name")
+    search_fields: tuple[str, ...] = ("name",)
+    ordering: tuple[str, ...] = ("name",)
