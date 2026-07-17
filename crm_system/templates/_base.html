@@ -67,9 +67,6 @@
                 </a>
             </li>
             {% endif %}
-            <li>
-                <hr>
-            </li>
             {% if perms.ads.view_adcampaign %}
             <li>
                 <a href="{% url 'ads:ads-statistic' %}"
@@ -79,6 +76,9 @@
                 </a>
             </li>
             {% endif %}
+            <li>
+                <hr>
+            </li>
             <li>
                 <form action="{% url 'logout' %}" method="post" class="px-3">
                     {% csrf_token %}
