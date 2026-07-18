@@ -1,3 +1,5 @@
+"""URL-маршруты для приложения «Контракты»."""
+
 from django.urls import path
 
 from .views import (
