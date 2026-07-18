@@ -80,12 +80,14 @@
                 <hr>
             </li>
             <li>
+                {% if user.is_authenticated %}
                 <form action="{% url 'logout' %}" method="post" class="px-3">
                     {% csrf_token %}
                     <button class="btn btn-light btn-sm w-100" type="submit">
                         <i class="fas fa-sign-out-alt"></i> Выход
                     </button>
                 </form>
+                {% endif %}
             </li>
         </ul>
     </div>
