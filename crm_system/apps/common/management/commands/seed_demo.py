@@ -1,4 +1,7 @@
+"""Management-команда для заполнения базы данных моковыми данными."""
+
 from datetime import date, timedelta
+from typing import Any
 
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
@@ -9,7 +12,7 @@ from apps.customers.models import Customer
 from apps.leads.models import Lead
 from apps.products.models import Product
 
-PRODUCTS_DATA = [
+PRODUCTS_DATA: list[dict[str, str]] = [
     {
         "name": "SEO-продвижение",
         "description": "Комплексная поисковая оптимизация сайта",
@@ -27,7 +30,7 @@ PRODUCTS_DATA = [
     },
 ]
 
-ADS_DATA = [
+ADS_DATA: list[dict[str, Any]] = [
     {
         "name": "Яндекс.Директ - SEO",
         "product_index": 0,
@@ -54,7 +57,7 @@ ADS_DATA = [
     },
 ]
 
-LEADS_DATA = [
+LEADS_DATA: list[dict[str, Any]] = [
     {
         "full_name": "Иванов Иван Иванович",
         "phone": "+79990000001",
@@ -117,7 +120,7 @@ LEADS_DATA = [
     },
 ]
 
-CONTRACTS_DATA = [
+CONTRACTS_DATA: list[dict[str, Any]] = [
     {
         "name": "Договор №001",
         "product_index": 0,
@@ -155,21 +158,53 @@ CONTRACTS_DATA = [
     },
 ]
 
-CUSTOMER_LEAD_INDICES = [0, 2, 4, 6, 8]
-CUSTOMER_CONTRACT_INDICES = [0, 1, 2, 3, 4]
+CUSTOMER_LEAD_INDICES: list[int] = [0, 2, 4, 6, 8]
+CUSTOMER_CONTRACT_INDICES: list[int] = [0, 1, 2, 3, 4]
 
 
 class Command(BaseCommand):
+    """Команда для заполнения базы данных моковыми данными.
+
+    Создает 3 услуги, 4 рекламные кампании, 10 потенциальных клиентов,
+    5 контрактов и 5 активных клиентов. Команда идемпотентна —
+    повторный запуск не создает дубликаты.
+
+    :ivar help: Текст справки, отображаемый при вызове python manage.py help.
+    :vartype help: str
+    """
+
     help = (
         "Заполняет БД моковыми данными: "
         "3 услуги, 4 РК, 10 лидов, 5 контрактов, 5 клиентов"
     )
 
-    def handle(self, *args, **kwargs) -> None:
+    def _log_created(self, created: bool, label: str) -> None:
+        """Выводит в консоль информацию о созданном или существующем объекте.
+
+        :param created: Флаг, указывающий был ли объект создан.
+        :type created: bool
+        :param label: Читаемое название объекта для вывода.
+        :type label: str
+        """
+        if created:
+            self.stdout.write(f" ✓ Создано: {label}")
+        else:
+            self.stdout.write(f" → Уже существует: {label}")
+
+    def handle(self, *args: Any, **kwargs: Any) -> None:
+        """Обработчик команды.
+
+        Последовательно создает объекты: услуги, рекламные кампании,
+        лидов, контракты и активных клиентов. Для каждого объекта
+        используется get_or_create для предотвращения дубликатов.
+
+        :param args: Позиционные аргументы командной строки.
+        :param options: Именованные аргументы командной строки.
+        """
         self.stdout.write("Начало заполнения БД моковыми данными...")
 
         # ----------- Услуги ------------------
-        products = []
+        products: list[Product] = []
 
         for item in PRODUCTS_DATA:
             product, created = Product.objects.get_or_create(
@@ -183,7 +218,7 @@ class Command(BaseCommand):
             self._log_created(created, f"Услуга: {product.name}")
 
         # ----------- Рекламные кампании ------------------
-        ads = []
+        ads: list[AdCampaign] = []
 
         for item in ADS_DATA:
             ad, created = AdCampaign.objects.get_or_create(
@@ -198,7 +233,7 @@ class Command(BaseCommand):
             self._log_created(created, f"Рекламная кампания: {ad.name}")
 
         # ----------- Потенциальные клиенты ------------------
-        leads = []
+        leads: list[Lead] = []
 
         for item in LEADS_DATA:
             lead, created = Lead.objects.get_or_create(
@@ -213,7 +248,7 @@ class Command(BaseCommand):
             self._log_created(created, f"Лид: {lead.full_name}")
 
         # ----------- Контракты ------------------
-        contracts = []
+        contracts: list[Contract] = []
 
         for item in CONTRACTS_DATA:
             contract, created = Contract.objects.get_or_create(
@@ -265,9 +300,3 @@ class Command(BaseCommand):
                 f" Активных клиентов: {Customer.objects.count()}"
             )
         )
-
-    def _log_created(self, created, label) -> None:
-        if created:
-            self.stdout.write(f" ✓ Создано: {label}")
-        else:
-            self.stdout.write(f" → Уже существует: {label}")
