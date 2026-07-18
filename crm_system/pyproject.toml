@@ -7,7 +7,14 @@ readme = "README.md"
 [tool.pylint.main]
 load-plugins = ["pylint_django"]
 django-settings-module = "config.settings"
+init-hook = "import os, sys; sys.path.insert(0, os.getcwd()); sys.path.insert(0, os.path.join(os.getcwd(), 'apps'))"
 ignore = ["migrations", "tests"]
+ignore-paths = [
+    ".*/migrations/*",
+    ".*/settings.py",
+    ".*/manage.py",
+    ".*/apps.py",
+]
 
 [tool.pylint.format]
 max-line-length = 100
@@ -16,6 +23,17 @@ max-line-length = 100
 disable = [
     "missing-module-docstring",
     "too-few-public-methods",
+    "raw-checker-failed",
+    "bad-inline-option",
+    "locally-disabled",
+    "file-ignored",
+    "suppressed-message",
+    "useless-suppression",
+    "deprecated-pragma",
+    "use-implicit-booleaness-not-comparison-to-string",
+    "use-implicit-booleaness-not-comparison-to-zero",
+    "use-symbolic-message-instead",
+    "too-many-ancestors",
 ]
 
 [tool.mypy]
