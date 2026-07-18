@@ -1,5 +1,6 @@
-import pytest
+"""Тесты для приложения «Контракты»."""
 
+import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
@@ -8,6 +9,13 @@ from .models import Contract
 
 @pytest.mark.django_db
 def test_contract_create_view(manager_client, product) -> None:
+    """Тест создания контракта менеджером через POST-запрос.
+
+    :param manager_client: Авторизованный клиент с ролью «Менеджер».
+    :type manager_client: django.test.Client
+    :param product: Фикстура услуги.
+    :type product: apps.products.models.Product
+    """
     response = manager_client.post(
         reverse("contracts:contracts-create"),
         data={
@@ -25,6 +33,13 @@ def test_contract_create_view(manager_client, product) -> None:
 
 @pytest.mark.django_db
 def test_contract_list_view(manager_client, contract: Contract) -> None:
+    """Тест отображения списка контрактов.
+
+    :param manager_client: Авторизованный клиент с ролью «Менеджер».
+    :type manager_client: django.test.Client
+    :param contract: Фикстура контракта.
+    :type contract: Contract
+    """
     response = manager_client.get(reverse("contracts:contracts-list"))
     assert response.status_code == 200
     assert contract.name.encode() in response.content
@@ -32,5 +47,10 @@ def test_contract_list_view(manager_client, contract: Contract) -> None:
 
 @pytest.mark.django_db
 def test_contract_permission_denied(operator_client) -> None:
+    """Тест запрета доступа к списку контрактов для оператора.
+
+    :param operator_client: Авторизованный клиент с ролью «Оператор».
+    :type operator_client: django.test.Client
+    """
     response = operator_client.get(reverse("contracts:contracts-list"))
     assert response.status_code == 403
