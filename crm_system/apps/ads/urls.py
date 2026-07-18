@@ -1,3 +1,5 @@
+"""URL-маршруты для приложения «Рекламные кампании»."""
+
 from django.urls import path
 
 from .views import (
