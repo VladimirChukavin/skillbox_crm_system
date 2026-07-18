@@ -3,6 +3,16 @@
 {% block title %}Главная - CRM{% endblock %}
 
 {% block content %}
-<h2 class="fw-bold">Добро пожаловать, {{ user.username }}!</h2>
-<p>Выберите раздел из меню в левой колонке.</p>
+<div class="row bg-white px-3 py-3 mx-2 my-5 rounded shadow-lg">
+    {% if user.is_authenticated %}
+    <h2 class="fw-bold">Добро пожаловать, {{ user.username }}!</h2>
+    <p>Выберите раздел из меню в левой колонке.</p>
+    {% else %}
+    <div class="col-md-4 text-center">
+        <h2 class="fw-bold">Добро пожаловать!</h2>
+        <p class="text-muted mb-4">Чтобы войти в систему, нажмите кнопку ниже.</p>
+        <a href="/login/" class="btn btn-primary mx-auto">Войти</a>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
