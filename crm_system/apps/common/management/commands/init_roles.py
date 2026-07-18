@@ -1,7 +1,11 @@
+"""Management-команда для создания преднастроенных ролей и разрешений."""
+
+from typing import Any
+
 from django.contrib.auth.models import Group, Permission
 from django.core.management.base import BaseCommand
 
-ROLE_PERMISSIONS = {
+ROLE_PERMISSIONS: dict[str, list[str]] = {
     "Оператор": [
         "leads.view_lead",
         "leads.add_lead",
@@ -30,9 +34,23 @@ ROLE_PERMISSIONS = {
 
 
 class Command(BaseCommand):
+    """Команда для создания групп пользователей (ролей) и назначения им разрешений.
+
+    :ivar help: Текст справки, отображаемый при вызове python manage.py help.
+    :vartype help: str
+    """
+
     help = "Создает преднастроенные роли пользователей"
 
-    def handle(self, *args, **options):
+    def handle(self, *args: Any, **options: Any) -> None:
+        """Обработчик команды.
+
+        Проходит по словарю ROLE_PERMISSIONS, создает или получает
+        группу (роль) и назначает ей соответствующие разрешения.
+
+        :param args: Позиционные аргументы командной строки.
+        :param options: Именованные аргументы командной строки.
+        """
         for role_name, perm_codenames in ROLE_PERMISSIONS.items():
             group, _created = Group.objects.get_or_create(name=role_name)
             group.permissions.clear()
@@ -47,11 +65,11 @@ class Command(BaseCommand):
                     group.permissions.add(perm)
                 else:
                     self.stdout.write(
-                        self.style.WARNING(f"Не найдено разрешение {perm_str}")
+                        self.style.WARNING(f"Не найдено разрешение {perm_str}"),
                     )
 
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"Роль {role_name} - {group.permissions.count()} разрешений"
+                    f"Роль {role_name} - {group.permissions.count()} разрешений",
                 ),
             )
