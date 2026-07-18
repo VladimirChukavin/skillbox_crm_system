@@ -1,14 +1,25 @@
-import pytest
+"""Тесты для приложения «Активные клиенты»."""
 
+import pytest
 from django.urls import reverse
 
 from .models import Customer
 
 
 @pytest.mark.django_db
-def test_customer_create_prefilled_lead(manager_client, lead, contract) -> None:
+def test_customer_create_prefilled_lead(manager_client, lead) -> None:
+    """Тест предзаполнения поля лида в форме создания активного клиента.
+
+    Проверяет, что GET-параметр lead корректно подставляется
+    в начальные значения формы.
+
+    :param manager_client: Авторизованный клиент с ролью «Менеджер».
+    :type manager_client: django.test.Client
+    :param lead: Фикстура потенциального клиента.
+    :param contract: Фикстура контракта.
+    """
     response = manager_client.get(
-        reverse("customers:customers-list") + f"?lead={lead.pk}",
+        reverse("customers:customers-create") + f"?lead={lead.pk}",
     )
     assert response.status_code == 200
     initial = response.context["form"].initial
@@ -17,8 +28,15 @@ def test_customer_create_prefilled_lead(manager_client, lead, contract) -> None:
 
 @pytest.mark.django_db
 def test_customer_create_post(manager_client, lead, contract) -> None:
+    """Тест создания активного клиента менеджером через POST-запрос.
+
+    :param manager_client: Авторизованный клиент с ролью «Менеджер».
+    :type manager_client: django.test.Client
+    :param lead: Фикстура потенциального клиента.
+    :param contract: Фикстура контракта.
+    """
     response = manager_client.post(
-        reverse("customers:customers-list"),
+        reverse("customers:customers-create"),
         data={"lead": lead.pk, "contract": contract.pk},
     )
     assert response.status_code == 302
@@ -27,6 +45,13 @@ def test_customer_create_post(manager_client, lead, contract) -> None:
 
 @pytest.mark.django_db
 def test_customer_list_view(manager_client, customer: Customer) -> None:
+    """Тест отображения списка активных клиентов.
+
+    :param manager_client: Авторизованный клиент с ролью «Менеджер».
+    :type manager_client: django.test.Client
+    :param customer: Фикстура активного клиента.
+    :type customer: Customer
+    """
     response = manager_client.get(reverse("customers:customers-list"))
     assert response.status_code == 200
     assert customer.lead.full_name.encode() in response.content
@@ -34,6 +59,13 @@ def test_customer_list_view(manager_client, customer: Customer) -> None:
 
 @pytest.mark.django_db
 def test_customer_delete_view(manager_client, customer: Customer) -> None:
+    """Тест удаления активного клиента.
+
+    :param manager_client: Авторизованный клиент с ролью «Менеджер».
+    :type manager_client: django.test.Client
+    :param customer: Фикстура активного клиента.
+    :type customer: Customer
+    """
     response = manager_client.post(
         reverse("customers:customers-delete", kwargs={"pk": customer.pk}),
     )
