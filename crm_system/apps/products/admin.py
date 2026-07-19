@@ -1,5 +1,7 @@
 """Настройки административной панели для услуг."""
 
+from typing import ClassVar
+
 from django.contrib import admin
 
 from .models import Product
@@ -21,5 +23,5 @@ class ProductAdmin(admin.ModelAdmin):
 
     list_display: tuple[str, ...] = ("id", "name", "price")
     list_display_links: tuple[str, ...] = ("id", "name")
-    search_fields: tuple[str, ...] = ("name",)
-    ordering: tuple[str, ...] = ("name",)
+    search_fields: ClassVar[tuple[str, ...]] = ("name",)
+    ordering: ClassVar[tuple[str, ...]] = ("name",)
