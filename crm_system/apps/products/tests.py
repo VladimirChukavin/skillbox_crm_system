@@ -1,5 +1,6 @@
-import pytest
+"""Тесты для приложения «Услуги»."""
 
+import pytest
 from django.urls import reverse
 
 from .models import Product
@@ -7,6 +8,11 @@ from .models import Product
 
 @pytest.mark.django_db
 def test_product_list_view(admin_client) -> None:
+    """Тест отображения списка услуг.
+
+    :param admin_client: Авторизованный клиент суперпользователя.
+    :type admin_client: django.test.Client
+    """
     Product.objects.create(name="Test", price="100.00")
     response = admin_client.get(reverse("products:products-list"))
     assert response.status_code == 200
@@ -15,7 +21,12 @@ def test_product_list_view(admin_client) -> None:
 
 @pytest.mark.django_db
 def test_product_create_view(admin_client) -> None:
-    response = admin_client.get(
+    """Тест создания услуги администратором через POST-запрос.
+
+    :param admin_client: Авторизованный клиент суперпользователя.
+    :type admin_client: django.test.Client
+    """
+    response = admin_client.post(
         reverse("products:products-create"),
         data={
             "name": "New service",
@@ -29,6 +40,13 @@ def test_product_create_view(admin_client) -> None:
 
 @pytest.mark.django_db
 def test_product_detail_view(admin_client, product: Product) -> None:
+    """Тест отображения детальной страницы услуги.
+
+    :param admin_client: Авторизованный клиент суперпользователя.
+    :type admin_client: django.test.Client
+    :param product: Фикстура услуги.
+    :type product: Product
+    """
     response = admin_client.get(
         reverse("products:products-detail", kwargs={"pk": product.pk}),
     )
@@ -38,7 +56,14 @@ def test_product_detail_view(admin_client, product: Product) -> None:
 
 @pytest.mark.django_db
 def test_product_delete_view(admin_client, product: Product) -> None:
-    response = admin_client.get(
+    """Тест удаления услуги администратором через POST-запрос.
+
+    :param admin_client: Авторизованный клиент суперпользователя.
+    :type admin_client: django.test.Client
+    :param product: Фикстура услуги.
+    :type product: Product
+    """
+    response = admin_client.post(
         reverse("products:products-delete", kwargs={"pk": product.pk}),
     )
     assert response.status_code == 302
@@ -47,5 +72,10 @@ def test_product_delete_view(admin_client, product: Product) -> None:
 
 @pytest.mark.django_db
 def test_product_list_permission_denied(operator_client) -> None:
+    """Тест запрета доступа к списку услуг для оператора.
+
+    :param operator_client: Авторизованный клиент с ролью «Оператор».
+    :type operator_client: django.test.Client
+    """
     response = operator_client.get(reverse("products:products-list"))
     assert response.status_code == 403
