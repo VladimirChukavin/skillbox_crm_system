@@ -1,5 +1,6 @@
-import pytest
+"""Тесты для приложения «Потенциальные клиенты»."""
 
+import pytest
 from django.urls import reverse
 
 from .models import Lead
@@ -7,6 +8,13 @@ from .models import Lead
 
 @pytest.mark.django_db
 def test_lead_list_view(operator_client, lead: Lead) -> None:
+    """Тест отображения списка потенциальных клиентов.
+
+    :param operator_client: Авторизованный клиент с ролью «Оператор».
+    :type operator_client: django.test.Client
+    :param lead: Фикстура потенциального клиента.
+    :type lead: Lead
+    """
     response = operator_client.get(reverse("leads:leads-list"))
     assert response.status_code == 200
     assert lead.full_name.encode() in response.content
@@ -14,8 +22,14 @@ def test_lead_list_view(operator_client, lead: Lead) -> None:
 
 @pytest.mark.django_db
 def test_lead_create_view(operator_client, ad_campaign) -> None:
+    """Тест создания потенциального клиента оператором через POST-запрос.
+
+    :param operator_client: Авторизованный клиент с ролью «Оператор».
+    :type operator_client: django.test.Client
+    :param ad_campaign: Фикстура рекламной кампании.
+    """
     response = operator_client.post(
-        reverse("leads:lead-create"),
+        reverse("leads:leads-create"),
         data={
             "full_name": "Василий Пупкин",
             "phone": "+79111111111",
@@ -29,6 +43,13 @@ def test_lead_create_view(operator_client, ad_campaign) -> None:
 
 @pytest.mark.django_db
 def test_lead_detail_view(operator_client, lead: Lead) -> None:
+    """Тест отображения детальной страницы потенциального клиента.
+
+    :param operator_client: Авторизованный клиент с ролью «Оператор».
+    :type operator_client: django.test.Client
+    :param lead: Фикстура потенциального клиента.
+    :type lead: Lead
+    """
     response = operator_client.get(
         reverse("leads:leads-detail", kwargs={"pk": lead.pk}),
     )
