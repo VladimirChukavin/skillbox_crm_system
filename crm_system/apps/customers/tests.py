@@ -74,5 +74,5 @@ def test_customer_delete_view(manager_client: Client, customer: Customer) -> Non
     response = manager_client.post(
         reverse("customers:customers-delete", kwargs={"pk": customer.pk}),
     )
-    assert response.status_code == 302
-    assert not Customer.objects.filter(pk=customer.pk).exists()
+    assert response.status_code == 403
+    assert Customer.objects.filter(pk=customer.pk).exists()
