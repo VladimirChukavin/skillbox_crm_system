@@ -191,19 +191,12 @@ class Command(BaseCommand):
         else:
             self.stdout.write(f" → Уже существует: {label}")
 
-    def handle(self, *args: Any, **kwargs: Any) -> None:
-        """Обработчик команды.
+    def _create_products(self) -> list[Product]:
+        """Создаёт услуги из PRODUCTS_DATA.
 
-        Последовательно создает объекты: услуги, рекламные кампании,
-        лидов, контракты и активных клиентов. Для каждого объекта
-        используется get_or_create для предотвращения дубликатов.
-
-        :param args: Позиционные аргументы командной строки.
-        :param options: Именованные аргументы командной строки.
+        :returns: Список созданных (или существующих) объектов Product.
+        :rtype: list[Product]
         """
-        self.stdout.write("Начало заполнения БД моковыми данными...")
-
-        # ----------- Услуги ------------------
         products: list[Product] = []
 
         for item in PRODUCTS_DATA:
@@ -217,7 +210,16 @@ class Command(BaseCommand):
             products.append(product)
             self._log_created(created, f"Услуга: {product.name}")
 
-        # ----------- Рекламные кампании ------------------
+        return products
+
+    def _create_ads(self, products: list[Product]) -> list[AdCampaign]:
+        """Создаёт рекламные кампании из ADS_DATA.
+
+        :param products: Список услуг для связи по индексу.
+        :type products: list[Product]
+        :returns: Список созданных (или существующих) объектов AdCampaign.
+        :rtype: list[AdCampaign]
+        """
         ads: list[AdCampaign] = []
 
         for item in ADS_DATA:
@@ -232,7 +234,16 @@ class Command(BaseCommand):
             ads.append(ad)
             self._log_created(created, f"Рекламная кампания: {ad.name}")
 
-        # ----------- Потенциальные клиенты ------------------
+        return ads
+
+    def _create_leads(self, ads: list[AdCampaign]) -> list[Lead]:
+        """Создаёт потенциальных клиентов из LEADS_DATA.
+
+        :param ads: Список рекламных кампаний для связи по индексу.
+        :type ads: list[AdCampaign]
+        :returns: Список созданных (или существующих) объектов Lead.
+        :rtype: list[Lead]
+        """
         leads: list[Lead] = []
 
         for item in LEADS_DATA:
@@ -247,7 +258,18 @@ class Command(BaseCommand):
             leads.append(lead)
             self._log_created(created, f"Лид: {lead.full_name}")
 
-        # ----------- Контракты ------------------
+        return leads
+
+    def _create_contracts(self, products: list[Product]) -> list[Contract]:
+        """Создаёт контракты из CONTRACTS_DATA.
+
+        Для каждого контракта без файла создаёт фиктивный PDF-документ.
+
+        :param products: Список услуг для связи по индексу.
+        :type products: list[Product]
+        :returns: Список созданных (или существующих) объектов Contract.
+        :rtype: list[Contract]
+        """
         contracts: list[Contract] = []
 
         for item in CONTRACTS_DATA:
@@ -275,9 +297,24 @@ class Command(BaseCommand):
             contracts.append(contract)
             self._log_created(created, f"Контракт: {contract.name}")
 
-        # ----------- Активные клиенты ------------------
+        return contracts
+
+    def _create_customers(
+        self,
+        leads: list[Lead],
+        contracts: list[Contract],
+    ) -> None:
+        """Создаёт активных клиентов из
+        CUSTOMER_LEAD_INDICES и CUSTOMER_CONTRACT_INDICES.
+
+        :param leads: Список потенциальных клиентов для связи по индексу.
+        :type leads: list[Lead]
+        :param contracts: Список контрактов для связи по индексу.
+        :type contracts: list[Contract]
+        """
         for lead_idx, contract_idx in zip(
-            CUSTOMER_LEAD_INDICES, CUSTOMER_CONTRACT_INDICES
+            CUSTOMER_LEAD_INDICES,
+            CUSTOMER_CONTRACT_INDICES,
         ):
             lead = leads[lead_idx]
             contract = contracts[contract_idx]
@@ -289,7 +326,24 @@ class Command(BaseCommand):
             )
             self._log_created(created, f"Активный клиент: {customer.lead.full_name}")
 
-        # ----------- Вывод ------------------
+    def handle(self, *args: Any, **kwargs: Any) -> None:
+        """Обработчик команды.
+
+        Последовательно создает объекты: услуги, рекламные кампании,
+        лидов, контракты и активных клиентов. Для каждого объекта
+        используется get_or_create для предотвращения дубликатов.
+
+        :param args: Позиционные аргументы командной строки.
+        :param kwargs: Именованные аргументы командной строки.
+        """
+        self.stdout.write("Начало заполнения БД моковыми данными...")
+
+        products: list[Product] = self._create_products()
+        ads: list[AdCampaign] = self._create_ads(products)
+        leads: list[Lead] = self._create_leads(ads)
+        contracts: list[Contract] = self._create_contracts(products)
+        self._create_customers(leads, contracts)
+
         self.stdout.write(
             self.style.SUCCESS(
                 f"\nГотово!\n"
