@@ -1,6 +1,7 @@
 """Представление для отображения статистики по рекламным кампаниям."""
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.cache import cache
 from django.db.models import Count, QuerySet, Sum
 from django.views.generic import ListView
 
@@ -26,6 +27,8 @@ class AdCampaignStatisticView(
     :vartype context_object_name: str
     :ivar permission_required: Требуемое разрешение для доступа к представлению.
     :vartype permission_required: str
+    :ivar cache_timeout: Время жизни кеша в секундах.
+    :vartype cache_timeout: int
     """
 
     model = AdCampaign
@@ -36,6 +39,9 @@ class AdCampaignStatisticView(
     def get_queryset(self) -> QuerySet[AdCampaign]:
         """Возвращает queryset рекламных кампаний с аннотированной статистикой.
 
+        Результат выполнения запроса кешируется. При повторном
+        обращении данные берутся из кеша, не выполняя SQL-запрос.
+
         Аннотирует каждую кампанию следующими вычисляемыми полями:
 
         - leads_count — количество привлечённых потенциальных клиентов.
@@ -45,11 +51,18 @@ class AdCampaignStatisticView(
         :returns: QuerySet рекламных кампаний с аннотированными полями статистики.
         :rtype: QuerySet[AdCampaign]
         """
-        return AdCampaign.objects.annotate(
-            leads_count=Count("leads", distinct=True),
-            active_customers_count=Count("leads__customer", distinct=True),
-            total_contract_amount=Sum(
-                "leads__customer__contract__amount",
-                default=0,
-            ),
-        )
+        cache_key = "ads:statistic:queryset"
+        queryset: QuerySet[AdCampaign] | None = cache.get(cache_key)
+
+        if queryset is None:
+            queryset = AdCampaign.objects.annotate(
+                leads_count=Count("leads", distinct=True),
+                active_customers_count=Count("leads__customer", distinct=True),
+                total_contract_amount=Sum(
+                    "leads__customer__contract__amount",
+                    default=0,
+                ),
+            )
+            cache.set(cache_key, queryset)
+
+        return queryset
