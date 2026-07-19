@@ -2,12 +2,14 @@
 
 import pytest
 from django.urls import reverse
+from django.test import Client
 
 from .models import Lead
+from ..ads.models import AdCampaign
 
 
 @pytest.mark.django_db
-def test_lead_list_view(operator_client, lead: Lead) -> None:
+def test_lead_list_view(operator_client: Client, lead: Lead) -> None:
     """Тест отображения списка потенциальных клиентов.
 
     :param operator_client: Авторизованный клиент с ролью «Оператор».
@@ -21,7 +23,7 @@ def test_lead_list_view(operator_client, lead: Lead) -> None:
 
 
 @pytest.mark.django_db
-def test_lead_create_view(operator_client, ad_campaign) -> None:
+def test_lead_create_view(operator_client: Client, ad_campaign: AdCampaign) -> None:
     """Тест создания потенциального клиента оператором через POST-запрос.
 
     :param operator_client: Авторизованный клиент с ролью «Оператор».
@@ -42,7 +44,7 @@ def test_lead_create_view(operator_client, ad_campaign) -> None:
 
 
 @pytest.mark.django_db
-def test_lead_detail_view(operator_client, lead: Lead) -> None:
+def test_lead_detail_view(operator_client: Client, lead: Lead) -> None:
     """Тест отображения детальной страницы потенциального клиента.
 
     :param operator_client: Авторизованный клиент с ролью «Оператор».
