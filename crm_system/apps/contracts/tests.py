@@ -3,12 +3,14 @@
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+from django.test import Client
 
 from .models import Contract
+from ..products.models import Product
 
 
 @pytest.mark.django_db
-def test_contract_create_view(manager_client, product) -> None:
+def test_contract_create_view(manager_client: Client, product: Product) -> None:
     """Тест создания контракта менеджером через POST-запрос.
 
     :param manager_client: Авторизованный клиент с ролью «Менеджер».
@@ -32,7 +34,7 @@ def test_contract_create_view(manager_client, product) -> None:
 
 
 @pytest.mark.django_db
-def test_contract_list_view(manager_client, contract: Contract) -> None:
+def test_contract_list_view(manager_client: Client, contract: Contract) -> None:
     """Тест отображения списка контрактов.
 
     :param manager_client: Авторизованный клиент с ролью «Менеджер».
@@ -46,7 +48,7 @@ def test_contract_list_view(manager_client, contract: Contract) -> None:
 
 
 @pytest.mark.django_db
-def test_contract_permission_denied(operator_client) -> None:
+def test_contract_permission_denied(operator_client: Client) -> None:
     """Тест запрета доступа к списку контрактов для оператора.
 
     :param operator_client: Авторизованный клиент с ролью «Оператор».
