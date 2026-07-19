@@ -2,12 +2,13 @@
 
 import pytest
 from django.urls import reverse
+from django.test import Client
 
 from .models import AdCampaign
 
 
 @pytest.mark.django_db
-def test_ads_list_view(admin_client, ad_campaign: AdCampaign) -> None:
+def test_ads_list_view(admin_client: Client, ad_campaign: AdCampaign) -> None:
     """Тест отображения списка рекламных кампаний.
 
     :param admin_client: Авторизованный клиент суперпользователя.
@@ -21,7 +22,7 @@ def test_ads_list_view(admin_client, ad_campaign: AdCampaign) -> None:
 
 
 @pytest.mark.django_db
-def test_ads_statistic_view(admin_client, ad_campaign: AdCampaign) -> None:
+def test_ads_statistic_view(admin_client: Client, ad_campaign: AdCampaign) -> None:
     """Тест отображения статистики с заполненными данными.
 
     Проверяет корректность аннотаций: число лидов, активных клиентов
@@ -42,7 +43,9 @@ def test_ads_statistic_view(admin_client, ad_campaign: AdCampaign) -> None:
 
 
 @pytest.mark.django_db
-def test_ads_statistic_empty_campaign(admin_client, ad_campaign) -> None:
+def test_ads_statistic_empty_campaign(
+    admin_client: Client, ad_campaign: AdCampaign
+) -> None:
     """Тест статистики для кампании без лидов и клиентов.
 
     Проверяет, что аннотированные поля принимают значения по умолчанию (0).
@@ -61,7 +64,7 @@ def test_ads_statistic_empty_campaign(admin_client, ad_campaign) -> None:
 
 
 @pytest.mark.django_db
-def test_ads_create_permission_denied(operator_client) -> None:
+def test_ads_create_permission_denied(operator_client: Client) -> None:
     """Тест запрета доступа к созданию кампании для оператора.
 
     :param operator_client: Авторизованный клиент с ролью «Оператор».
