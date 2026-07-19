@@ -1,9 +1,7 @@
-from collections.abc import Generator
 from typing import Any
 
 import pytest
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group, Permission, User
 from django.test import Client
 
 from apps.ads.models import AdCampaign
@@ -11,8 +9,6 @@ from apps.contracts.models import Contract
 from apps.customers.models import Customer
 from apps.leads.models import Lead
 from apps.products.models import Product
-
-User = get_user_model()
 
 
 @pytest.fixture
