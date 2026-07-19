@@ -112,34 +112,21 @@ def manager_group(db: Any) -> Group:
 
 
 @pytest.fixture
-def operator(db: Any, operator_group: Group) -> User:
-    """Создаёт пользователя с ролью «Оператор».
+def operator_client(client: Client, operator_group: Group) -> Client:
+    """Создаёт и возвращает авторизованный клиент пользователя с ролью «Оператор».
 
-    :param db: Маркер доступа к базе данных pytest-django.
+    :param client: Базовый тестовый клиент Django.
+    :type client: Client
     :param operator_group: Фикстура группы «Оператор».
     :type operator_group: Group
-    :returns: Объект пользователя-оператора.
-    :rtype: User
+    :returns: Авторизованный тестовый клиент.
+    :rtype: Client
     """
     user = User.objects.create_user(
         username="operator", password="op123", email="op@test.com"
     )
     user.groups.add(operator_group)
-    return user
-
-
-@pytest.fixture
-def operator_client(client: Client, operator: User) -> Client:
-    """Возвращает авторизованный клиент пользователя с ролью «Оператор».
-
-    :param client: Базовый тестовый клиент Django.
-    :type client: Client
-    :param operator: Фикстура пользователя-оператора.
-    :type operator: User
-    :returns: Авторизованный тестовый клиент.
-    :rtype: Client
-    """
-    client.force_login(operator)
+    client.force_login(user)
     return client
 
 
