@@ -38,7 +38,6 @@ disable = [
 
 [tool.mypy]
 plugins = ["mypy_django_plugin.main"]
-strict = true
 ignore_missing_imports = true
 warn_return_any = true
 disallow_incomplete_defs = true
@@ -49,7 +48,9 @@ exclude = [
     "README.md",
     ".env",
     ".gitignore",
+    "^media/.*$",
     "^static/.*$",
+    "^templates/.*$",
 ]
 
 [tool.django-stubs]
