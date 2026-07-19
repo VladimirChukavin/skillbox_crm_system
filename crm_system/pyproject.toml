@@ -56,7 +56,7 @@ exclude = [
 [tool.django-stubs]
 django_settings_module = "config.settings"
 
-[tool.pytest]
-django_settings_module = "config.settings"
-python_files = ["test_*.py", "*_test.py"]
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["tests.py"]
 testpaths = ["apps"]
