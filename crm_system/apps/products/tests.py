@@ -2,12 +2,13 @@
 
 import pytest
 from django.urls import reverse
+from django.test import Client
 
 from .models import Product
 
 
 @pytest.mark.django_db
-def test_product_list_view(admin_client) -> None:
+def test_product_list_view(admin_client: Client) -> None:
     """Тест отображения списка услуг.
 
     :param admin_client: Авторизованный клиент суперпользователя.
@@ -20,7 +21,7 @@ def test_product_list_view(admin_client) -> None:
 
 
 @pytest.mark.django_db
-def test_product_create_view(admin_client) -> None:
+def test_product_create_view(admin_client: Client) -> None:
     """Тест создания услуги администратором через POST-запрос.
 
     :param admin_client: Авторизованный клиент суперпользователя.
@@ -39,7 +40,7 @@ def test_product_create_view(admin_client) -> None:
 
 
 @pytest.mark.django_db
-def test_product_detail_view(admin_client, product: Product) -> None:
+def test_product_detail_view(admin_client: Client, product: Product) -> None:
     """Тест отображения детальной страницы услуги.
 
     :param admin_client: Авторизованный клиент суперпользователя.
@@ -55,7 +56,7 @@ def test_product_detail_view(admin_client, product: Product) -> None:
 
 
 @pytest.mark.django_db
-def test_product_delete_view(admin_client, product: Product) -> None:
+def test_product_delete_view(admin_client: Client, product: Product) -> None:
     """Тест удаления услуги администратором через POST-запрос.
 
     :param admin_client: Авторизованный клиент суперпользователя.
@@ -71,7 +72,7 @@ def test_product_delete_view(admin_client, product: Product) -> None:
 
 
 @pytest.mark.django_db
-def test_product_list_permission_denied(operator_client) -> None:
+def test_product_list_permission_denied(operator_client: Client) -> None:
     """Тест запрета доступа к списку услуг для оператора.
 
     :param operator_client: Авторизованный клиент с ролью «Оператор».
