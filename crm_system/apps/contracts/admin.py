@@ -1,5 +1,7 @@
 """Настройки административной панели для контрактов."""
 
+from typing import ClassVar
+
 from django.contrib import admin
 
 from .models import Contract
@@ -33,8 +35,8 @@ class ContractAdmin(admin.ModelAdmin):
         "amount",
     )
     list_display_links: tuple[str, ...] = ("name",)
-    search_fields: tuple[str, ...] = ("name",)
-    list_filter: tuple[str, ...] = ("product", "conclusion_date", "amount")
-    ordering: tuple[str, ...] = ("name", "-conclusion_date")
-    autocomplete_fields: tuple[str, ...] = ("product",)
-    readonly_fields: tuple[str, ...] = ("conclusion_date",)
+    search_fields: ClassVar[tuple[str, ...]] = ("name",)
+    list_filter: ClassVar[tuple[str, ...]] = ("product", "conclusion_date", "amount")
+    ordering: ClassVar[tuple[str, ...]] = ("name", "-conclusion_date")
+    autocomplete_fields: ClassVar[tuple[str, ...]] = ("product",)
+    readonly_fields: ClassVar[tuple[str, ...]] = ("conclusion_date",)
