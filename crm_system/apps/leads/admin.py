@@ -1,5 +1,7 @@
 """Настройки административной панели для потенциальных клиентов."""
 
+from typing import ClassVar
+
 from django.contrib import admin
 from django.db.models import QuerySet
 from django.http import HttpRequest
@@ -30,10 +32,10 @@ class LeadAdmin(admin.ModelAdmin):
 
     list_display: tuple[str, ...] = ("id", "full_name", "phone", "email", "ad_campaign")
     list_display_links: tuple[str, ...] = ("full_name",)
-    search_fields: tuple[str, ...] = ("full_name", "phone", "email")
-    list_filter: tuple[str, ...] = ("ad_campaign", "ad_campaign__product")
-    ordering: tuple[str, ...] = ("full_name",)
-    autocomplete_fields: tuple[str, ...] = ("ad_campaign",)
+    search_fields: ClassVar[tuple[str, ...]] = ("full_name", "phone", "email")
+    list_filter: ClassVar[tuple[str, ...]] = ("ad_campaign", "ad_campaign__product")
+    ordering: ClassVar[tuple[str, ...]] = ("full_name",)
+    autocomplete_fields: ClassVar[tuple[str, ...]] = ("ad_campaign",)
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Lead]:
         """Возвращает queryset лидов, не преобразованных в активных клиентов.
