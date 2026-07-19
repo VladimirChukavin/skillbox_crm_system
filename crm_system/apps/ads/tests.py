@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.test import Client
 
 from .models import AdCampaign
+from apps.customers.models import Customer
+from apps.leads.models import Lead
 
 
 @pytest.mark.django_db
@@ -22,7 +24,12 @@ def test_ads_list_view(admin_client: Client, ad_campaign: AdCampaign) -> None:
 
 
 @pytest.mark.django_db
-def test_ads_statistic_view(admin_client: Client, ad_campaign: AdCampaign) -> None:
+def test_ads_statistic_view(
+    admin_client: Client,
+    ad_campaign: AdCampaign,
+    lead: Lead,
+    customer: Customer,
+) -> None:
     """Тест отображения статистики с заполненными данными.
 
     Проверяет корректность аннотаций: число лидов, активных клиентов
@@ -32,13 +39,17 @@ def test_ads_statistic_view(admin_client: Client, ad_campaign: AdCampaign) -> No
     :type admin_client: django.test.Client
     :param ad_campaign: Фикстура рекламной кампании.
     :type ad_campaign: AdCampaign
+    :param lead: Фикстура потенциального клиента.
+    :type lead: Lead
+    :param customer: Фикстура активного клиента.
+    :type customer: Customer
     """
     response = admin_client.get(reverse("ads:ads-statistic"))
     assert response.status_code == 200
     qs = response.context["ads"]
     item = qs.get(pk=ad_campaign.pk)
     assert item.leads_count == 1
-    assert item.active_customer_count == 1
+    assert item.active_customers_count == 1
     assert item.total_contract_amount == 150000
 
 
@@ -59,7 +70,7 @@ def test_ads_statistic_empty_campaign(
     qs = response.context["ads"]
     item = qs.get(pk=ad_campaign.pk)
     assert item.leads_count == 0
-    assert item.active_customer_count == 0
+    assert item.active_customers_count == 0
     assert item.total_contract_amount == 0
 
 
