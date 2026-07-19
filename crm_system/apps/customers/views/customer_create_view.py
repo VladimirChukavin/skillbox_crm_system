@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from apps.customers.models import Customer
+from apps.leads.models import Lead
 
 
 class CustomerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -31,6 +32,19 @@ class CustomerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
     template_name = "customers/customers-create.html"
     success_url = reverse_lazy("customers:customers-list")
     permission_required = "customers.add_customer"
+
+    def get_form(self, form_class: type[Any] | None = None) -> Any:
+        """Возвращает экземпляр формы с отфильтрованным queryset для поля lead.
+
+        В список выбора попадают только лиды, у которых ещё нет связи
+        с активным клиентом (customer__isnull=True).
+
+        :returns: Экземпляр формы.
+        :rtype: forms.Form
+        """
+        form = super().get_form()
+        form.fields["lead"].queryset = Lead.objects.filter(customer__isnull=True)
+        return form
 
     def get_initial(self) -> dict[str, Any]:
         """Возвращает словарь начальных значений для формы.
