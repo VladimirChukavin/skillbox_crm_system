@@ -141,6 +141,19 @@ MEDIA_ROOT = BASE_DIR / "media"
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
 
+# Cache
+# https://docs.djangoproject.com/en/6.0/topics/cache/
+CACHE_TIMEOUT = 300
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "crm-cache",
+        "TIMEOUT": CACHE_TIMEOUT,
+    }
+}
+
+
 # Logging
 
 LOG_DIR = BASE_DIR / "logs"
