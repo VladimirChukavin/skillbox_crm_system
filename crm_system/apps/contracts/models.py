@@ -1,5 +1,6 @@
 """Модель контракта."""
 
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -32,7 +33,12 @@ class Contract(models.Model):
     )
     conclusion_date = models.DateField(verbose_name="Дата заключения")
     duration = models.PositiveIntegerField(verbose_name="Период действия (дней)")
-    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма")
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        verbose_name="Сумма",
+    )
 
     class Meta:
         verbose_name = "Контракт"
