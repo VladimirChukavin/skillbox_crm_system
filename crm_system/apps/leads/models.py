@@ -1,5 +1,6 @@
 """Модель потенциального клиента."""
 
+from django.core.validators import RegexValidator
 from django.db import models
 
 
@@ -16,9 +17,31 @@ class Lead(models.Model):
     :vartype ad_campaign: AdCampaign
     """
 
-    full_name = models.CharField(max_length=255, verbose_name="Ф.И.О")
-    phone = models.CharField(max_length=15, verbose_name="Телефон")
-    email = models.EmailField(verbose_name="Email")
+    full_name = models.CharField(
+        max_length=255,
+        validators=[
+            RegexValidator(
+                regex=r"^[А-ЯЁ][а-яё]+ [А-ЯЁ][а-яё]+ [А-ЯЁ][а-яё]+$",
+                message="Ф.И.О должно быть в формате: Иванов Иван Иванович",
+            )
+        ],
+        verbose_name="Ф.И.О",
+    )
+    phone = models.CharField(
+        max_length=15,
+        validators=[
+            RegexValidator(
+                regex=r"^\+?1?\d{9,15}$",
+                message="Номер телефона должен быть в формате: +71234567890",
+            )
+        ],
+        verbose_name="Телефон",
+        null=True,
+        blank=True,
+    )
+    email = models.EmailField(
+        max_length=255, verbose_name="Email", null=True, blank=True
+    )
     ad_campaign = models.ForeignKey(
         "ads.AdCampaign",
         on_delete=models.CASCADE,
