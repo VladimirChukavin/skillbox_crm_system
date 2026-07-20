@@ -18,6 +18,18 @@ class AdCampaign(models.Model):
     """
 
     class Channel(models.TextChoices):
+        """Перечисление доступных каналов продвижения.
+
+        :cvar YANDEX_DIRECT: Реклама в Яндекс.Директ.
+        :vartype YANDEX_DIRECT: str
+        :cvar VKONTAKTE: Реклама в социальной сети ВКонтакте.
+        :vartype VKONTAKTE: str
+        :cvar GOOGLE_ADS: Реклама в Google Ads.
+        :vartype GOOGLE_ADS: str
+        :cvar TELEGRAM: Реклама в Telegram-каналах.
+        :vartype TELEGRAM: str
+        """
+
         YANDEX_DIRECT = "Яндекс.Директ", "Яндекс.Директ"
         VKONTAKTE = "ВКонтакте", "ВКонтакте"
         GOOGLE_ADS = "Google Ads", "Google Ads"
